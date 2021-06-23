@@ -24,8 +24,8 @@ public class HelloController {
     }
 
     @PostMapping("/addMessages")
-    public List<Message> saveAll(List<Message> characters) {
-        return helloService.saveAll(characters);
+    public List<Message> saveAll(@RequestBody List<Message> messages) {
+        return helloService.saveAll(messages);
     }
 
     // Read
@@ -39,10 +39,19 @@ public class HelloController {
     public ResponseEntity<Message> getMessageById(@PathVariable String id) {
         Message result = this.helloService.getMessageById(id);
         HttpStatus status = HttpStatus.OK;
-        if(result == null) {
+        if (result == null) {
             status = HttpStatus.NO_CONTENT;
         }
         return new ResponseEntity(result, status);
+    }
+
+    @GetMapping(value = "/getException", produces = "application/json")
+    public Message getException() {
+        Message message = null;
+        if (message == null) {
+            throw new NullPointerException("There's an issue!");
+        }
+        return message;
     }
 
     @GetMapping(value = "/getAllMessagesByContent", produces = "application/json")
@@ -73,7 +82,7 @@ public class HelloController {
         HttpStatus status;
         String message = "";
 
-        if(success) {
+        if (success) {
             status = HttpStatus.NO_CONTENT;
         } else {
             status = HttpStatus.NOT_FOUND;
@@ -89,8 +98,5 @@ public class HelloController {
         return new ResponseEntity<>(true, HttpStatus.OK);
 
     }
-
-
-
 
 }

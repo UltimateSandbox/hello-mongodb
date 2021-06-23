@@ -9,7 +9,6 @@ public class Message {
 
     @Id
     private String id;
-
     private String message;
 
     public Message() {
@@ -32,7 +31,6 @@ public class Message {
         this.id = id;
     }
 
-    @NonNull
     public String getMessage() {
         return message;
     }

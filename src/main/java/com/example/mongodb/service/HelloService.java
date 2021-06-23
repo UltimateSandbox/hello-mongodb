@@ -55,7 +55,7 @@ public class HelloService {
 
         Message result = null;
         message.setId(id);
-        if(messageExists(id)) {
+        if (messageExists(id)) {
             result = this.repository.save(message);
         }
         return result;
@@ -72,7 +72,7 @@ public class HelloService {
             exists = false;
         }
 
-        if(result == null) {
+        if (result == null) {
             exists = false;
         }
 
