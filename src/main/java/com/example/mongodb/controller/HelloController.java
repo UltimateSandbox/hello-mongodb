@@ -18,6 +18,8 @@ public class HelloController {
     }
 
     // Create
+    // per HTTP spec RFC 2616, Section 9.5
+
     @PostMapping(value = "/addMessage", produces = "application/json")
     public Message setMessage(@RequestBody Message message) {
         return this.helloService.saveMessage(message);
@@ -29,14 +31,18 @@ public class HelloController {
     }
 
     // Read
+    // per HTTP spec RFC 2616, Section 9.3
+
     @GetMapping(value = "/getAllMessages", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public List<Message> getAllMessages() {
+
         return this.helloService.getAllMessages();
     }
 
     @GetMapping(value = "/getMessageById/{id}", produces = "application/json")
     public ResponseEntity<Message> getMessageById(@PathVariable String id) {
+
         Message result = this.helloService.getMessageById(id);
         HttpStatus status = HttpStatus.OK;
         if (result == null) {
@@ -47,6 +53,7 @@ public class HelloController {
 
     @GetMapping(value = "/getException", produces = "application/json")
     public Message getException() {
+
         Message message = null;
         if (message == null) {
             throw new NullPointerException("There's an issue!");
@@ -56,14 +63,16 @@ public class HelloController {
 
     @GetMapping(value = "/getAllMessagesByContent", produces = "application/json")
     public List<Message> getAllMessagesByContent(@RequestParam(value = "match") String matching) {
+
         return this.helloService.getAllMessagesByContent(matching);
     }
 
     // Update
+    // per HTTP spec RFC 2616, Section 9.6
+
     @PutMapping(value = "updateMessage/{id}", produces = "application/json")
     public ResponseEntity<String> updateMessage(@PathVariable String id, @RequestBody Message message) {
 
-        // per HTTP spec RFC 2616, Section 9.6
         Message result = this.helloService.updateMessage(id, message);
         HttpStatus status = HttpStatus.NO_CONTENT;
         String responseMessage = "";
@@ -75,6 +84,8 @@ public class HelloController {
     }
 
     // Delete
+    // per HTTP spec RFC 2616, Section 9.7
+
     @DeleteMapping(value = "deleteMessage/{id}", produces = "application/json")
     public ResponseEntity<String> deleteMessage(@PathVariable String id) {
 
@@ -96,7 +107,6 @@ public class HelloController {
 
         this.helloService.deleteAllMessages();
         return new ResponseEntity<>(true, HttpStatus.OK);
-
     }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class HelloService {
@@ -39,9 +40,15 @@ public class HelloService {
 
         Message result = null;
         try {
-            result = this.repository.findById(id).get();
-        } catch (NoSuchElementException e) {
-            logger.error("Issue getting message by Id!", e);
+            boolean messageExists = this.repository.existsById(id);
+            if(messageExists) {
+                Optional<Message> optional = this.repository.findById(id);
+                if(optional.isPresent()) {
+                    result = optional.get();
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            logger.error("Cannot supply a null id.", e);
         }
         return result;
     }
@@ -55,35 +62,23 @@ public class HelloService {
 
         Message result = null;
         message.setId(id);
-        if (messageExists(id)) {
+        boolean messageExists = this.repository.existsById(id);
+        if (messageExists) {
             result = this.repository.save(message);
         }
         return result;
     }
 
-    // Test for message existence
-    private boolean messageExists(String id) {
-
-        boolean exists = true;
-        Message result = null;
-        try {
-            result = repository.findById(id).get();
-        } catch (NoSuchElementException e) {
-            exists = false;
-        }
-
-        if (result == null) {
-            exists = false;
-        }
-
-        return exists;
-    }
-
     public Boolean deleteMessage(String id) {
+
         boolean success = true;
         try {
+            boolean messageExists = this.repository.existsById(id);
+            if(!messageExists) {
+                throw new IllegalArgumentException();
+            }
             this.repository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (IllegalArgumentException e) {
             success = false;
         }
         return success;
